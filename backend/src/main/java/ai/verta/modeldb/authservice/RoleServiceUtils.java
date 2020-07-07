@@ -40,6 +40,7 @@ import ai.verta.uac.ResourceType;
 import ai.verta.uac.Resources;
 import ai.verta.uac.Role;
 import ai.verta.uac.RoleBinding;
+import ai.verta.uac.RoleBinding.Builder;
 import ai.verta.uac.RoleScope;
 import ai.verta.uac.ServiceEnum;
 import ai.verta.uac.ServiceEnum.Service;
@@ -95,6 +96,33 @@ public class RoleServiceUtils implements RoleService {
         + collaborator.getNameForBinding();
   }
 
+  @Override
+  public void createRoleBinding(
+      String role, RoleScope scope,
+      CollaboratorBase collaborator,
+      String resourceId,
+      ModelDBServiceResourceTypes modelDBServiceResourceTypes) {
+    String roleBindingName =
+        buildRoleBindingName(
+            role, resourceId, collaborator, modelDBServiceResourceTypes.name());
+
+    Builder newRoleBinding = RoleBinding.newBuilder()
+        .setName(roleBindingName)
+        .setRoleId(role)
+        .addEntities(collaborator.getEntities())
+        .addResources(
+            Resources.newBuilder()
+                .setService(Service.MODELDB_SERVICE)
+                .setResourceType(
+                    ResourceType.newBuilder()
+                        .setModeldbServiceResourceType(modelDBServiceResourceTypes))
+                .addResourceIds(resourceId)
+                .build());
+    if (scope != null) {
+      newRoleBinding.setScope(scope);
+    }
+    setRoleBindingOnAuthService(true, newRoleBinding.build());
+  }
   @Override
   public void createRoleBinding(
       Role role,
@@ -1178,8 +1206,7 @@ public class RoleServiceUtils implements RoleService {
         default:
           return;
       }
-      Role admin = getRoleByName(roleAdminName, null);
-      createRoleBinding(admin, collaboratorUser, resourceId, resourceType);
+      createRoleBinding(roleAdminName, null, collaboratorUser, resourceId, resourceType);
     }
   }
 
