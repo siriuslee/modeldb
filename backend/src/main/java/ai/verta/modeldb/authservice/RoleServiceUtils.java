@@ -380,7 +380,7 @@ public class RoleServiceUtils implements RoleService {
           authServiceChannel
               .getRoleServiceBlockingStub()
               .setRoleBinding(SetRoleBinding.newBuilder().setRoleBinding(roleBinding).build());
-      LOGGER.info(ModelDBMessages.ROLE_SERVICE_RES_RECEIVED_MSG);
+      LOGGER.info(ModelDBMessages.ROLE_SERVICE_RES_RECEIVED_MSG + roleBinding);
       LOGGER.trace(ModelDBMessages.ROLE_SERVICE_RES_RECEIVED_TRACE_MSG, setRoleBindingResponse);
     } catch (StatusRuntimeException ex) {
       ModelDBUtils.retryOrThrowException(
