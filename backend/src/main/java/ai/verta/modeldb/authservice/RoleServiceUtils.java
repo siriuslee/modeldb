@@ -109,7 +109,7 @@ public class RoleServiceUtils implements RoleService {
     Builder newRoleBinding =
         RoleBinding.newBuilder()
             .setName(roleBindingName)
-            .setRoleId(role)
+            .setRoleName(role)
             .addEntities(collaborator.getEntities())
             .addResources(
                 Resources.newBuilder()
