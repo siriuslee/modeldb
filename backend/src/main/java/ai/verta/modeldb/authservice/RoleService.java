@@ -30,7 +30,8 @@ public interface RoleService {
       String roleName, String resourceId, CollaboratorBase collaborator, String resourceTypeName);
 
   void createRoleBinding(
-      String roleName, RoleScope scope,
+      String roleName,
+      RoleScope scope,
       CollaboratorBase collaborator,
       String resourceId,
       ModelDBServiceResourceTypes modelDBServiceResourceTypes);

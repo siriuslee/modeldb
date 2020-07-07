@@ -98,31 +98,33 @@ public class RoleServiceUtils implements RoleService {
 
   @Override
   public void createRoleBinding(
-      String role, RoleScope scope,
+      String role,
+      RoleScope scope,
       CollaboratorBase collaborator,
       String resourceId,
       ModelDBServiceResourceTypes modelDBServiceResourceTypes) {
     String roleBindingName =
-        buildRoleBindingName(
-            role, resourceId, collaborator, modelDBServiceResourceTypes.name());
+        buildRoleBindingName(role, resourceId, collaborator, modelDBServiceResourceTypes.name());
 
-    Builder newRoleBinding = RoleBinding.newBuilder()
-        .setName(roleBindingName)
-        .setRoleId(role)
-        .addEntities(collaborator.getEntities())
-        .addResources(
-            Resources.newBuilder()
-                .setService(Service.MODELDB_SERVICE)
-                .setResourceType(
-                    ResourceType.newBuilder()
-                        .setModeldbServiceResourceType(modelDBServiceResourceTypes))
-                .addResourceIds(resourceId)
-                .build());
+    Builder newRoleBinding =
+        RoleBinding.newBuilder()
+            .setName(roleBindingName)
+            .setRoleId(role)
+            .addEntities(collaborator.getEntities())
+            .addResources(
+                Resources.newBuilder()
+                    .setService(Service.MODELDB_SERVICE)
+                    .setResourceType(
+                        ResourceType.newBuilder()
+                            .setModeldbServiceResourceType(modelDBServiceResourceTypes))
+                    .addResourceIds(resourceId)
+                    .build());
     if (scope != null) {
       newRoleBinding.setScope(scope);
     }
     setRoleBindingOnAuthService(true, newRoleBinding.build());
   }
+
   @Override
   public void createRoleBinding(
       Role role,
